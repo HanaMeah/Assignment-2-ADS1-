@@ -38,12 +38,14 @@ df_GDP_per_country.drop(
 #make a subset with the countries I want to look at in GDPpercentage
 GDP_df = df_GDP_per_country.iloc[1:11]
 
+GDP_df.transpose()
+
 print(GDP_df.head(11))
 
 #second data set I am comparing
-#Access to Clean Fuels and Technologies for Cooking and Rural percentage
-cleanfuel_df = pd.read_csv("CleanFuelsTechpercentage.csv")
-print(cleanfuel_df.head(11))
+#IMprtzs percentage
+imports_df = pd.read_csv("ImportsofGoodsiNservices.csv")
+print(imports_df.head(11))
 
 
 
