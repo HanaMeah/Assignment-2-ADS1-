@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 Spyder Editor
 
@@ -28,11 +29,10 @@ def reading_my_data(datafilename):
     as well as cleans it
 
     """
-    df_orig = pd.read_csv(datafilename)   
+    df_orig = pd.read_csv(datafilename)
     columns = df_orig.columns[1:]
 
     df_orig[columns] = df_orig[columns].apply(pd.to_numeric)
-
 
     # Transposing my dataframe
     df_transposed = df_orig.transpose()
@@ -40,7 +40,6 @@ def reading_my_data(datafilename):
     df_transposed = df_transposed.iloc[1:]
     df_transposed = df_transposed.apply(pd.to_numeric)
 
-    
     return df_transposed, df_orig
 
 
@@ -50,57 +49,56 @@ def summary_stats(df):
     country when called using my transposed dataset for GDP.
 
     """
-    
+
     summary_stats1 = df.describe()
-    
+
     print(summary_stats1)
 
     return
 
 
-
 def skew(df):
     """ 
-    
+
     Calculates the centralised and normalised skewness of my data 
-    
+
     """
-    
+
     # calculating mean, std
     mean = np.mean(df)
     std = np.std(df)
-    
+
     # calculating skewness per country
     value1 = np.sum(((df-mean) / std)**3) / len(df-2)
     print(value1)
-    
-    return value1
 
+    return value1
 
 
 def kurtosis(df):
     """ 
-    
+
     Calculates the centralised and normalised excess kurtosis of my data 
-    
+
     """
-    
+
     # calculates average and std, dev for centralising and normalising
     mean = np.mean(df)
     std = np.std(df)
-    
+
     # now calculate the kurtosis
     value2 = np.sum(((df-mean) / std)**4) / len(df-3) - 3.0
     print(value2)
-    
+
     return value2
+
 
 def plot_kurt(df):
     """
     This function produces the kurtosis plot for the dataset.
 
     """
-   
+
     plt.figure(1)
     plt.hist([kurtosis(df)], bins=10, edgecolor='black')
 
@@ -108,16 +106,17 @@ def plot_kurt(df):
     plt.ylabel('Frequency')
     plt.title('Distribution of Data')
 
-    plt.legend(['kurtosis','skewness'])
-    
+    plt.legend(['kurtosis'])
+
     return
+
 
 def plot_skewness(df):
     """
     This function produces the kurtosis and skewness plot for the dataset.
 
     """
-    
+
     plt.figure(2)
     plt.hist([skew(df)], bins=10, edgecolor='black')
 
@@ -125,7 +124,8 @@ def plot_skewness(df):
     plt.ylabel('Frequency')
     plt.title('Distribution of Data')
 
-    plt.legend(['kurtosis','skewness'])
+    plt.legend(['skewness'])
+
 
 def lineplotGDP(df):
     """
@@ -136,19 +136,19 @@ def lineplotGDP(df):
 
     plt.figure(3)
     df.reset_index().plot(x='index')
-    
+
     plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
     plt.xlabel("Year")
     plt.ylabel("GDP in USD $")
     plt.title("GDP in my selection of countries")
-    return 
+    return
 
 
 def GDP_bar_plot_2015_GDP(df):
     """
-    
+
     This function plots GDP data from the csv file and plots a 2015 bar graph.
-    
+
 
     """
 
@@ -158,35 +158,10 @@ def GDP_bar_plot_2015_GDP(df):
     plt.xlabel("Countries")
     plt.ylabel("GDP ")
     plt.title("GDP in 2015")
-    plt.xticks(rotation=45)  
-    
+    plt.xticks(rotation=45)
+
     return
 
-def lineplot_pop_LEDC(df):
-    """
-
-    This function creates a lineplot Less Economically Developed countries 
-    for population data
-
-    """
-
-    plt.figure(5)
-    
-    plt.plot(df["Year"], df["Albania"], label="Albania")
-    plt.plot(df["Year"], df["Ecuador"], label="Ecuador")
-    plt.plot(df["Year"], df["Egypt"], label="Egypt")
-
-    plt.plot(df["Year"], df["Ghana"], label="Ghana")
-    plt.plot(df["Year"], df["Myanmar"], label="Myanmar")
-
-    plt.plot(df["Year"], df["Vietnam"], label="Vietnam")
-
-    plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
-    
-    plt.xlabel("Year")
-    plt.ylabel("Population")
-    plt.title("Population in LEDC countries")
-    return 
 
 def lineplot_pop_MEDC(df):
     """
@@ -197,18 +172,18 @@ def lineplot_pop_MEDC(df):
     """
 
     plt.figure(6)
-    
+
     plt.plot(df["Year"], df["France"], label="France")
     plt.plot(df["Year"], df["Germany"], label="Germany")
     plt.plot(df["Year"], df["United Kingdom"], label="United Kingdom")
     plt.plot(df["Year"], df["United States"], label="United States")
 
-    
     plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
     plt.xlabel("Year")
     plt.ylabel("Population")
     plt.title("Population in MEDC countries")
-    return 
+    return
+
 
 def lineplot_pop_all(df):
     """
@@ -218,7 +193,7 @@ def lineplot_pop_all(df):
     """
 
     plt.figure(7)
-    
+
     plt.plot(df["Year"], df["Albania"], label="Albania")
     plt.plot(df["Year"], df["Ecuador"], label="Ecuador")
     plt.plot(df["Year"], df["Egypt"], label="Egypt")
@@ -230,59 +205,99 @@ def lineplot_pop_all(df):
     plt.plot(df["Year"], df["United Kingdom"], label="United Kingdom")
     plt.plot(df["Year"], df["United States"], label="United States")
 
-    
     plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
     plt.xlabel("Year")
     plt.ylabel("Population")
     plt.title("Population in all countries")
     return
 
-def piechart_labour_force(df, countries):
+
+def piechart_labour_force(df, countries, year):
     """
 
-    Pie Chart defnining proportion of Labour Force in each country in 2022
+    Pie Chart defnining proportion of Labour Force in each country for a 
+    chosen year in my dataset
 
     """
 
     plt.figure(8)
 
-    plt.pie(df, labels=countries)
-    plt.title("Labour Force in 2022")
+    plt.pie(df, labels=countries, autopct='%1.1f%%')
+    plt.title("Labour Force in " + year)
     return
 
 
-# main program
+def column_bar_plot_Arable_Land():
+    """
 
-#stuff for data set 1
+    Function creates a column bar plot for Arable Land Square km data for each
+    of my chosen countries
+
+    """
+
+    df = pd.read_csv("ArableLandSquareKM.csv")
+
+    blue_bar_2015 = np.array(df.iloc[1, 1:8])
+    orange_bar_2018 = np.array(df.iloc[4, 1:8])
+    green_bar_2022 = np.array(df.iloc[-1, 1:8])
+
+    N = 7
+    ind = np.arange(N)
+    plt.figure(figsize=(10, 5))
+    width = 0.3
+
+    plt.bar(ind, blue_bar_2015, width, label="2015")
+    plt.bar(ind + width, orange_bar_2018, width, label="2018")
+    plt.bar(ind + 2*width, green_bar_2022, width, label="2022")
+
+    plt.xlabel("Countries in Selection")
+    plt.ylabel("Land in Square km")
+    plt.title("Change of Arable Land Square km in key countries")
+
+    countries = ["Egypt", "France", "Germany", "Ghana", "Myanmar", "UK",
+                 "Vietnam"]
+
+    plt.xticks(ind + width, (countries))
+
+    plt.legend(loc='best')
+    plt.show()
+    return
+
+
+# main program starts here
+
 
 df_GDP_transposed, df_GDP_orig = reading_my_data("GDPpercapitaUSD.csv")
 
-summary_stats(df_GDP_transposed)           #summary stats for GDP
+summary_stats(df_GDP_transposed)  # summary statistics for GDP
 
-value1 = skew(df_GDP_transposed)           #skewness for GDP
-valu2 = kurtosis(df_GDP_transposed)        #kurtosis for GDP
-plot_kurt(df_GDP_transposed)               #Kurtosis plot
-plot_skewness(df_GDP_transposed)           #Skewness plot
+value1 = skew(df_GDP_transposed)  # skewness for GDP
+valu2 = kurtosis(df_GDP_transposed)  # kurtosis for GDP
+plot_kurt(df_GDP_transposed)  # Kurtosis plot
+plot_skewness(df_GDP_transposed)  # Skewness plot
 
 GDP_bar_plot_2015_GDP(df_GDP_orig)
 
 lineplotGDP(df_GDP_transposed)
 
 
-
-#stuff for data set 2
-
 df_pop_transposed, df_pop_orig = reading_my_data("PopulationTransposed.csv")
-lineplot_pop_LEDC(df_pop_orig)
-lineplot_pop_MEDC(df_pop_orig)
-lineplot_pop_all(df_pop_orig)
+
+lineplot_pop_MEDC(df_pop_orig)  #call line plot function for MEDC countries
+lineplot_pop_all(df_pop_orig)   ##call line plot function for all countries
 
 
-df_labourforce_transposed, df_labourforce_orig = reading_my_data("LabourForceTotal.csv")
+# making the pie charts in my report. I ran each call line separately 
+# as individual liness to view both pie charts
 
-df_labour_force_2022 = df_labourforce_transposed.iloc[-1, ]
-countries = ["Albania", "Ecuador", "Egypt", "France", "Germany", "Ghana", 
-          "Myanmar", "United Kingdom", "United States", "Vietnam"]
+df_labourforce_transposed, df_labourforce_orig = reading_my_data(
+    "LabourForceTotal.csv")
 
-piechart_labour_force(df_labour_force_2022, countries)
+df_labour_force_2022 = df_labourforce_transposed.iloc[-1, 2:11] #subset 2022
+df_labour_force_2015 = df_labourforce_transposed.iloc[1, 2:11]  #subset 2015
 
+countries = ["Egypt", "France", "Germany", "Myanmar", "United Kingdom",
+             "United States", "Vietnam"]
+
+piechart_labour_force(df_labour_force_2022, countries, "2022")
+piechart_labour_force(df_labour_force_2015, countries, "2015")
