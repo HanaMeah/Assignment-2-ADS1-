@@ -13,7 +13,6 @@ Hana Meah
 
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.stats import kurtosis
 from scipy.stats import skew
@@ -24,9 +23,9 @@ from scipy.stats import skew
 def reading_my_data(datafilename):
     """
 
-    Genertal function to read all of my data csv files which also 
-    gives the output of my original dataframe and my transposed data frame 
-    as well as cleans it
+    General function to read all of my data csv files which gives the output 
+    of my original dataframe and my transposed data frame and cleans the 
+    transposed dataframe
 
     """
     df_orig = pd.read_csv(datafilename)
@@ -45,8 +44,10 @@ def reading_my_data(datafilename):
 
 def summary_stats(df):
     """
+    
     This function produces the summary statistics of my dataset anually per
-    country when called using my transposed dataset for GDP.
+    country when called using my transposed dataset for GDP. It can also be
+    called with other datasets.
 
     """
 
@@ -55,6 +56,34 @@ def summary_stats(df):
     print(summary_stats1)
 
     return
+
+
+def merge_2_datasets(data1, data2):
+    """
+    
+    This function merges 2  of my chosen datasets when called with data inputs
+
+    """
+
+    my_merged_data = pd.merge(
+        data1, data2, left_index=True, right_index=True, how="inner")
+
+    return my_merged_data
+
+
+def concat_3_dataframes(df1, df2, df3):
+    """
+    
+    This function concatunates 3  of my chosen datasets when called with data 
+    inputs
+
+    """
+    
+    chosen_dataframes = [df1, df2, df3]
+
+    joined_data = pd.concat(chosen_dataframes)
+
+    return joined_data
 
 
 def skew(df):
@@ -86,7 +115,7 @@ def kurtosis(df):
     mean = np.mean(df)
     std = np.std(df)
 
-    # now calculate the kurtosis
+    # calculating kurtosis
     value2 = np.sum(((df-mean) / std)**4) / len(df-3) - 3.0
     print(value2)
 
@@ -95,34 +124,37 @@ def kurtosis(df):
 
 def plot_kurt(df):
     """
-    This function produces the kurtosis plot for the dataset.
+    
+    This function produces the kurtosis plot for the inputted dataset.
 
     """
 
     plt.figure(1)
     plt.hist([kurtosis(df)], bins=10, edgecolor='black')
 
-    plt.xlabel('Values')
-    plt.ylabel('Frequency')
-    plt.title('Distribution of Data')
+    plt.xlabel("Values")
+    plt.ylabel("Frequency")
+    plt.title("Distribution of Data")
 
-    plt.legend(['kurtosis'])
+    plt.legend(["kurtosis"])
 
     return
 
 
 def plot_skewness(df):
     """
-    This function produces the kurtosis and skewness plot for the dataset.
+    
+    This function produces the skewness plot for the inputted 
+    dataset.
 
     """
 
     plt.figure(2)
     plt.hist([skew(df)], bins=10, edgecolor='black')
 
-    plt.xlabel('Values')
-    plt.ylabel('Frequency')
-    plt.title('Distribution of Data')
+    plt.xlabel("Values")
+    plt.ylabel("Frequency")
+    plt.title("Distribution of Data")
 
     plt.legend(['skewness'])
 
@@ -147,7 +179,8 @@ def lineplotGDP(df):
 def GDP_bar_plot_2015_GDP(df):
     """
 
-    This function plots GDP data from the csv file and plots a 2015 bar graph.
+    This function plots GDP data from the csv file and plots a bar graph for 
+    2015 for all countries in the file.
 
 
     """
@@ -166,8 +199,8 @@ def GDP_bar_plot_2015_GDP(df):
 def lineplot_pop_MEDC(df):
     """
 
-    This function creates a lineplot More Economically Developed countries 
-    for population data
+    This function creates a lineplot for the More Economically Developed 
+    countries in the population dataset
 
     """
 
@@ -235,24 +268,25 @@ def column_bar_plot_Arable_Land():
 
     """
 
-    df = pd.read_csv("ArableLandSquareKM.csv")
+    df_ArableLand_transposed, df_ArableLand = reading_my_data(
+        "ArableLandSquareKM.csv")
 
-    blue_bar_2015 = np.array(df.iloc[1, 1:8])
-    orange_bar_2018 = np.array(df.iloc[4, 1:8])
-    green_bar_2022 = np.array(df.iloc[-1, 1:8])
+    blue_bar_2015 = np.array(df_ArableLand_transposed.iloc[0, 0:8])
+    orange_bar_2018 = np.array(df_ArableLand_transposed.iloc[3, 0:8])
+    green_bar_2022 = np.array(df_ArableLand_transposed.iloc[-1, 0:8])
 
     N = 7
     ind = np.arange(N)
     plt.figure(figsize=(10, 5))
     width = 0.3
 
-    plt.bar(ind, blue_bar_2015, width, label="2015")
-    plt.bar(ind + width, orange_bar_2018, width, label="2018")
-    plt.bar(ind + 2*width, green_bar_2022, width, label="2022")
+    plt.bar(ind, blue_bar_2015, width, label='2015')
+    plt.bar(ind + width, orange_bar_2018, width, label='2018')
+    plt.bar(ind + 2*width, green_bar_2022, width, label='2022')
 
     plt.xlabel("Countries in Selection")
     plt.ylabel("Land in Square km")
-    plt.title("Change of Arable Land Square km in key countries")
+    plt.title("Arable Land Square km in key countries")
 
     countries = ["Egypt", "France", "Germany", "Ghana", "Myanmar", "UK",
                  "Vietnam"]
@@ -261,6 +295,30 @@ def column_bar_plot_Arable_Land():
 
     plt.legend(loc='best')
     plt.show()
+
+    return
+
+
+def boxplot_primary_education():
+    """
+
+    This function creates a boxplot for primary education in Germany and UK
+    which I believe give interesting information to compare
+
+    """
+
+    df_PECR_transposed, df_PECR_orig = reading_my_data(
+        "PrimaryEducationCompletionRate.csv")
+
+    Germany = df_PECR_transposed.iloc[1:7, 2]
+    UK = df_PECR_transposed.iloc[1:7, -1]
+
+    plt.boxplot([Germany, UK], labels=["Germany", "UK"])
+    
+    plt.ylabel("Percentage Increase")
+    plt.xlabel("Countries of interest")
+    plt.title("Primary education completion percentage increase")
+
     return
 
 
@@ -283,21 +341,35 @@ lineplotGDP(df_GDP_transposed)
 
 df_pop_transposed, df_pop_orig = reading_my_data("PopulationTransposed.csv")
 
-lineplot_pop_MEDC(df_pop_orig)  #call line plot function for MEDC countries
-lineplot_pop_all(df_pop_orig)   ##call line plot function for all countries
+lineplot_pop_MEDC(df_pop_orig)  # call line plot function for MEDC countries
+lineplot_pop_all(df_pop_orig)  # call line plot function for all countries
 
 
-# making the pie charts in my report. I ran each call line separately 
+# making the pie charts in my report. I ran each call line separately
 # as individual liness to view both pie charts
 
 df_labourforce_transposed, df_labourforce_orig = reading_my_data(
     "LabourForceTotal.csv")
 
-df_labour_force_2022 = df_labourforce_transposed.iloc[-1, 2:11] #subset 2022
-df_labour_force_2015 = df_labourforce_transposed.iloc[1, 2:11]  #subset 2015
+df_labour_force_2022 = df_labourforce_transposed.iloc[-1, 2:11]  # subset 2022
+df_labour_force_2015 = df_labourforce_transposed.iloc[1, 2:11]  # subset 2015
 
 countries = ["Egypt", "France", "Germany", "Myanmar", "United Kingdom",
              "United States", "Vietnam"]
 
+# run each line separately to get the 2 pie charts for 2022 and 2015
 piechart_labour_force(df_labour_force_2022, countries, "2022")
 piechart_labour_force(df_labour_force_2015, countries, "2015")
+
+
+column_bar_plot_Arable_Land()  # column bar plot function to plot arable land
+
+df_ArableLand_transposed, df_ArableLand = reading_my_data(
+    "ArableLandSquareKM.csv")
+
+# I used merge and concatenate for my data sets to see if it may be of use
+GDP_and_Population = merge_2_datasets(df_GDP_orig, df_pop_orig)
+all_3_datasets = concat_3_dataframes(
+    df_GDP_transposed, df_pop_transposed, df_ArableLand_transposed)
+
+boxplot_primary_education() # boxplot for primary education percentage increase
